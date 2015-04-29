@@ -1,6 +1,5 @@
 package ch.daplab.yarn.poller.rx;
 
-import ch.daplab.yarn.poller.rx.PollerObservable;
 import org.junit.Test;
 import org.mockito.Mockito;
 import rx.Observable;
@@ -19,17 +18,17 @@ public class PollerObservableTest {
     @Test
     public void test() throws IOException {
 
-        final int numberOfTweets = r.nextInt(100) + 100;
+        final int numberOfUpdate = 1;
 
         final PollerObservable pollerObservable = new PollerObservable();
         Observer<byte[]> observerMock = Mockito.mock(Observer.class);
 
-        Observable<byte[]> observable = Observable.create(twitterObservable);
+        Observable<byte[]> observable = Observable.create(pollerObservable);
 
         // block until onComplete is called.
-        observable.limit(numberOfTweets).subscribe(observerMock);
+        observable.limit(numberOfUpdate).subscribe(observerMock);
 
-        Mockito.verify(observerMock, Mockito.times(numberOfTweets)).onNext(Mockito.<byte[]>any());
+        Mockito.verify(observerMock, Mockito.times(numberOfUpdate)).onNext(Mockito.<byte[]>any());
         Mockito.verify(observerMock, Mockito.times(1)).onCompleted();
         Mockito.verify(observerMock, Mockito.never()).onError(Mockito.<Throwable>any());
 

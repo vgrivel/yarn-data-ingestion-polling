@@ -1,7 +1,6 @@
 package ch.daplab.yarn.poller;
 
 import ch.daplab.yarn.twill.AbstractTwillLauncher;
-import ch.daplab.yarn.twitter.TwitterToHDFSCli;
 import org.apache.hadoop.util.ToolRunner;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,7 +23,7 @@ public class PollerToFileIntegrationTest extends AbstractTwillLauncher {
         args.add(zkConnect);
 
 
-        int res = ToolRunner.run(miniCluster.getConfig(), new TwitterToHDFSCli(), args.toArray(new String[0]));
+        int res = ToolRunner.run(miniCluster.getConfig(), new PollerToHDFSCli(), args.toArray(new String[0]));
 
         // wait few more seconds
         Thread.sleep(20000);

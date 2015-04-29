@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static ch.daplab.yarn.twitter.TwitterToHDFSCli.DEFAULT_FILE_SUFFIX;
-import static ch.daplab.yarn.twitter.TwitterToHDFSCli.DEFAULT_PARTITION_FORMAT;
+import static ch.daplab.yarn.poller.PollerToHDFSCli.DEFAULT_FILE_SUFFIX;
+import static ch.daplab.yarn.poller.PollerToHDFSCli.DEFAULT_PARTITION_FORMAT;
 
 /**
  * Created by mil2048 on 4/22/15.

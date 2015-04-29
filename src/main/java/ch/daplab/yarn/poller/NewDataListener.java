@@ -4,4 +4,6 @@ package ch.daplab.yarn.poller;
  * Created by vincent on 4/29/15.
  */
 public interface NewDataListener {
+    void onNewData(StringBuffer buffer);
+
 }
