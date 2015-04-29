@@ -14,4 +14,4 @@ export HADOOP_CLASSPATH=$(find target/lib/ -type f -name "*.jar" | grep -v "yarn
 export HADOOP_USER_CLASSPATH_FIRST=true
 
 # Standard launch. PollerToHDFSCli implements Tool interface.
-yarn jar target/yarn-starter-*.jar ch.daplab.yarn.poller.PollerToHDFSCli --zk.connect $1
+yarn jar target/yarn-data-*.jar ch.daplab.yarn.poller.PollerToHDFSCli --zk.connect $1
