@@ -44,7 +44,7 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
         poller.registerObserver(this);
 
         LOG.info("Starting to read from the source");
-        Timer timer = new Timer(true);
+        Timer timer = new Timer();
         timer.scheduleAtFixedRate(poller, 0, 5 * 1000);
 
 
