@@ -13,5 +13,5 @@ export HADOOP_CLASSPATH=$(find target/lib/ -type f -name "*.jar" | grep -v "yarn
 # Ensure our libs (mainly specific guava version) has precedence over the one provided by hadoop
 export HADOOP_USER_CLASSPATH_FIRST=true
 
-# Standard launch. TwitterToHDFSCli implements Tool interface.
-yarn jar target/yarn-starter-*.jar ch.daplab.yarn.twitter.TwitterToHDFSCli --zk.connect $1
+# Standard launch. PollerToHDFSCli implements Tool interface.
+yarn jar target/yarn-starter-*.jar ch.daplab.yarn.poller.PollerToHDFSCli --zk.connect $1
