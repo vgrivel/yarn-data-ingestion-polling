@@ -1,6 +1,7 @@
-package ch.daplab.yarn.twitter;
+package ch.daplab.yarn.poller;
 
 import ch.daplab.yarn.twill.AbstractTwillLauncher;
+import ch.daplab.yarn.twitter.TwitterToHDFSCli;
 import org.apache.hadoop.util.ToolRunner;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -12,7 +13,7 @@ import java.util.List;
  * Created by mil2048 on 4/23/15.
  */
 @Ignore
-public class TwitterToFileIntegrationTest extends AbstractTwillLauncher {
+public class PollerToFileIntegrationTest extends AbstractTwillLauncher {
 
     @Test
     public void test() throws Exception {

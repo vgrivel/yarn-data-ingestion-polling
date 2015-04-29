@@ -1,5 +1,6 @@
-package ch.daplab.yarn.twitter.rx;
+package ch.daplab.yarn.poller.rx;
 
+import ch.daplab.yarn.poller.rx.PollerObservable;
 import org.junit.Test;
 import org.mockito.Mockito;
 import rx.Observable;
@@ -11,7 +12,7 @@ import java.util.Random;
 /**
  * Created by mil2048 on 4/22/15.
  */
-public class TwitterObservableTest {
+public class PollerObservableTest {
 
     private final Random r = new Random();
 
@@ -20,7 +21,7 @@ public class TwitterObservableTest {
 
         final int numberOfTweets = r.nextInt(100) + 100;
 
-        final TwitterObservable twitterObservable = new TwitterObservable();
+        final PollerObservable pollerObservable = new PollerObservable();
         Observer<byte[]> observerMock = Mockito.mock(Observer.class);
 
         Observable<byte[]> observable = Observable.create(twitterObservable);
