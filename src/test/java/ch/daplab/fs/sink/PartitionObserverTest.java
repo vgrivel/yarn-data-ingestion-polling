@@ -1,5 +1,6 @@
 package ch.daplab.fs.sink;
 
+import ch.daplab.constants.PollerConstants;
 import com.google.common.io.Files;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -17,8 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static ch.daplab.yarn.poller.PollerToHDFSCli.DEFAULT_FILE_SUFFIX;
-import static ch.daplab.yarn.poller.PollerToHDFSCli.DEFAULT_PARTITION_FORMAT;
 
 /**
  * Created by mil2048 on 4/22/15.
@@ -34,7 +33,7 @@ public class PartitionObserverTest {
 
         Path p = new Path(Files.createTempDir().toURI());
 
-        PartitionedObserver partitionedObserver = new PartitionedObserver(p.toString(), DEFAULT_PARTITION_FORMAT, DEFAULT_FILE_SUFFIX, fs);
+        PartitionedObserver partitionedObserver = new PartitionedObserver(p.toString(), PollerConstants.getPartitionFormat(), PollerConstants.getFileSuffix(), fs);
 
         byte[] payload = new byte[128];
         Arrays.fill(payload, "c".getBytes()[0]);

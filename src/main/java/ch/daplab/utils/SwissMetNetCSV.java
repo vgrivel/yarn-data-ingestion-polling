@@ -4,7 +4,8 @@ package ch.daplab.utils;
  * Created by vincent on 4/29/15.
  */
 public class SwissMetNetCSV implements FileProcessing {
-    @Override
+
+
     public byte[] process(byte[] byteArray) {
         String data = new String(byteArray);
         String finalData = changeCSVSeparator(removeHeader(data));

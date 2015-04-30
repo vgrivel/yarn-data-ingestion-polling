@@ -1,5 +1,6 @@
 package ch.daplab.yarn.poller.rx;
 
+import ch.daplab.constants.PollerConstants;
 import ch.daplab.utils.FileProcessing;
 import ch.daplab.utils.SwissMetNetCSV;
 import ch.daplab.yarn.poller.NewDataListener;
@@ -26,10 +27,8 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
     private CountDownLatch countDownLatch = new CountDownLatch(1);
     private volatile AtomicReference<Subscriber<? super byte[]>> subscriberRef = new AtomicReference<>(null);
     private GeneralPoller poller;
-    private FileProcessing fileProcessing;
 
-    public PollerObservable(){
-        fileProcessing = new SwissMetNetCSV();
+    public PollerObservable() {
     }
 
     @Override
@@ -38,14 +37,12 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
             return;
         }
 
-        poller = new GeneralPoller(
-                "http://data.geo.admin.ch.s3.amazonaws.com/ch.meteoschweiz.swissmetnet/VQHA69.txt", true);
-
+        poller = new GeneralPoller(PollerConstants.getUrl(), PollerConstants.isEtagSupported());
         poller.registerObserver(this);
 
         LOG.info("Starting to read from the source");
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(poller, 0, 60 * 1000);
+        timer.scheduleAtFixedRate(poller, 0, PollerConstants.getIntervalMS());
 
 
     }
@@ -65,7 +62,7 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
 
         } else {
             //process the file by removing the header and change the csv separator from pipe to comma
-            byte[] payload = fileProcessing.process(buffer.toString().getBytes());
+            byte[] payload = PollerConstants.getProcessingClass().process(buffer.toString().getBytes());
 
             subscriber.onNext(payload);
 
@@ -73,19 +70,20 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
 
         }
     }
-        private void internalClose () {
 
-            if (close.compareAndSet(false, true)) {
+    private void internalClose() {
 
-                poller.cancel();
+        if (close.compareAndSet(false, true)) {
 
-                Subscriber<? super byte[]> subscriber = subscriberRef.get();
-                if (subscriber != null && !subscriber.isUnsubscribed()) {
-                    subscriber.onCompleted();
-                    subscriber.unsubscribe();
-                }
+            poller.cancel();
 
-                countDownLatch.countDown();
+            Subscriber<? super byte[]> subscriber = subscriberRef.get();
+            if (subscriber != null && !subscriber.isUnsubscribed()) {
+                subscriber.onCompleted();
+                subscriber.unsubscribe();
             }
+
+            countDownLatch.countDown();
         }
     }
+}

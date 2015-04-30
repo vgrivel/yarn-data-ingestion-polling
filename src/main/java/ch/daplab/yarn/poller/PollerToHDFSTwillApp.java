@@ -1,5 +1,6 @@
 package ch.daplab.yarn.poller;
 
+import ch.daplab.constants.PollerConstants;
 import ch.daplab.fs.sink.PartitionedObserver;
 import ch.daplab.yarn.poller.rx.PollerObservable;
 import joptsimple.OptionParser;
@@ -45,7 +46,7 @@ public class PollerToHDFSTwillApp extends AbstractTwillRunnable {
         try {
             fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf);
 
-            Observable.create(new PollerObservable()).subscribe(new PartitionedObserver(DEFAULT_ROOT_FOLDER, DEFAULT_PARTITION_FORMAT, DEFAULT_FILE_SUFFIX, fs));
+            Observable.create(new PollerObservable()).subscribe(new PartitionedObserver(PollerConstants.getRootFolder(), PollerConstants.getPartitionFormat(), PollerConstants.getFileSuffix(), fs));
 
         } catch (IOException e) {
             LOG.error("Got an IOException", e);

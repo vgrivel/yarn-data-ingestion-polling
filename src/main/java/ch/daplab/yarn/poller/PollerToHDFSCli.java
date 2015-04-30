@@ -1,5 +1,7 @@
 package ch.daplab.yarn.poller;
 
+import ch.daplab.constants.PollerConstants;
+import ch.daplab.utils.Context;
 import ch.daplab.yarn.AbstractAppLauncher;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -21,14 +23,12 @@ import java.util.List;
  * Created by vincent on 4/28/15.
  */
 public class PollerToHDFSCli extends AbstractAppLauncher {
-    public static final String OPTION_FS_DEFAULTFS = "fs.defaultFS";
-    public static final String DEFAULT_ROOT_FOLDER = "/tmp/poller/firehose/";
-    public static final String DEFAULT_FILE_SUFFIX = ".csv";
-    public static final String DEFAULT_PARTITION_FORMAT = "yyyy/MM/dd/HH/mm";
+    public static String OPTION_FS_DEFAULTFS = "fs.defaultFS";
 
     private static final Logger LOG = LoggerFactory.getLogger(PollerToHDFSCli.class);
 
     public static void main(String[] args) throws Exception {
+
         int res = ToolRunner.run(new Configuration(), new PollerToHDFSCli(), args);
         System.exit(res);
     }
@@ -39,6 +39,9 @@ public class PollerToHDFSCli extends AbstractAppLauncher {
      */
     @Override
     protected int internalRun() throws Exception {
+        Context context = new Context("conf/config.conf");
+        new PollerConstants(context);
+
         String defaultFS = (String) getOptions().valueOf(OPTION_FS_DEFAULTFS);
         if (defaultFS == null) {
             defaultFS = FileSystem.getDefaultUri(getConf()).toString();
