@@ -51,10 +51,12 @@ public class PollerToHDFSTwillApp extends AbstractTwillRunnable {
             LOG.error("Got an IOException", e);
         } finally {
             if (fs != null) {
-                try {
-                    fs.close();
-                } catch (IOException e) {
-                }
+                //TODO issue: by closing the filesytem there, it is not possible to write in the PartitionedObserver!
+                // Have to find a better way to close properly the fs!
+              //  try {
+              //     fs.close();
+              //  } catch (IOException e) {
+              //  }
             }
         }
     }

@@ -101,6 +101,7 @@ public class PartitionedObserver implements Observer<byte[]> {
 
             currentDataOutputStream = fs.create(new Path(partition));
             previousPartition = partition;
+
         }
 
         return currentDataOutputStream;

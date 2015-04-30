@@ -1,6 +1,8 @@
 package ch.daplab.yarn.poller.worker;
 
 import ch.daplab.yarn.poller.NewDataListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import java.util.TimerTask;
  */
 public class GeneralPoller extends TimerTask implements Observable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GeneralPoller.class);
     private ArrayList<NewDataListener> observers = new ArrayList<NewDataListener>();
 
     private String url;
