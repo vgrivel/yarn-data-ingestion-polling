@@ -101,6 +101,8 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
     private void privateInitParser() {
         getParser().accepts(OPTION_ZK_CONNECT, "List of ZK host:port hosts, comma-separated.")
                 .withRequiredArg().required();
+        getParser().accepts(OPTION_CONFIG_FILE, "Path of the config file")
+                .withRequiredArg().required();
 
         initParser();
 
