@@ -25,14 +25,13 @@ import java.util.List;
  */
 public class PollerToHDFSCli extends AbstractAppLauncher {
     public static String OPTION_FS_DEFAULTFS = "fs.defaultFS";
-    public static long INTERVAL_MS = 1000;
-    public static String URL = "";
-    public static boolean ETAG_SUPPORT;
-    public static String ROOT_FOLDER = "";
-    public static String FILE_SUFFIX = "";
-    public static String PARTITION_FORMAT = "";
-    public static FileProcessing FILE_OBJECT;
-
+    public static String OPTION_INTERVAL_MS = "intervalms";
+    public static String OPTION_URL = "url";
+    public static String OPTION_ETAG_SUPPORT = "etagSupport";
+    public static String OPTION_ROOT_FOLDER = "rootFolder";
+    public static String OPTION_FILE_SUFFIX = "fileSuffix";
+    public static String OPTION_PARTITION_FORMAT = "partitionFormat";
+    public static String OPTION_PARSING_CLASS = "fileObject";
 
     private static final Logger LOG = LoggerFactory.getLogger(PollerToHDFSCli.class);
 
@@ -50,13 +49,13 @@ public class PollerToHDFSCli extends AbstractAppLauncher {
     protected int internalRun() throws Exception {
 
         Context context = new Context(getConfigFilePath());
-        URL = context.getString("url");
-        ETAG_SUPPORT = Boolean.valueOf(context.getString("etagSupport"));
-        INTERVAL_MS = Long.valueOf(context.getString("intervalMS"));
-        ROOT_FOLDER = context.getString("rootFolder");
-        FILE_SUFFIX = context.getString("fileSuffix");
-        PARTITION_FORMAT = context.getString("partitionFormat");
-        instantiateClass(context.getString("fileProcessing"));
+        String url = context.getString("url");
+        boolean etagSupport = Boolean.valueOf(context.getString("etagSupport"));
+        long intervalms = Long.valueOf(context.getString("intervalMS"));
+        String rootFolder = context.getString("rootFolder");
+        String fileSuffix = context.getString("fileSuffix");
+        String partitionFormat = context.getString("partitionFormat");
+        String parsingClass = context.getString("fileProcessing");
 
 
         String defaultFS = (String) getOptions().valueOf(OPTION_FS_DEFAULTFS);
@@ -72,10 +71,32 @@ public class PollerToHDFSCli extends AbstractAppLauncher {
 
         runnerService.startAndWait();
 
-
         List<String> args = new ArrayList<>();
+
         args.add("--" + OPTION_FS_DEFAULTFS);
         args.add(defaultFS);
+
+        args.add("--" + OPTION_INTERVAL_MS);
+        args.add(String.valueOf(intervalms));
+
+        args.add("--" + OPTION_URL);
+        args.add(url);
+
+        args.add("--" + OPTION_ETAG_SUPPORT);
+        args.add(String.valueOf(etagSupport));
+
+        args.add("--" + OPTION_ROOT_FOLDER);
+        args.add(rootFolder);
+
+        args.add("--" + OPTION_FILE_SUFFIX);
+        args.add(fileSuffix);
+
+        args.add("--" + OPTION_PARTITION_FORMAT);
+        args.add(partitionFormat);
+
+        args.add("--" + OPTION_PARSING_CLASS);
+        args.add(parsingClass);
+
 
         TwillController controller = runnerService.prepare(new PollerToHDFSTwillApp())
                 .withApplicationArguments(args.toArray(new String[0]))
@@ -89,20 +110,4 @@ public class PollerToHDFSCli extends AbstractAppLauncher {
         return ReturnCode.ALL_GOOD;
     }
 
-    private void instantiateClass(String fqn) {
-        if (fqn != null || !fqn.equals("")) {
-            try {
-                Class cl = Class.forName(fqn);
-                FILE_OBJECT = (FileProcessing) cl.newInstance();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        } else {
-            FILE_OBJECT = new DefaultFileProcessing();
-        }
-    }
 }

@@ -37,6 +37,14 @@ public class PollerToHDFSTwillApp extends AbstractTwillRunnable {
 
         String defaultFs = (String) optionSet.valueOf(OPTION_FS_DEFAULTFS);
 
+        String url = (String) optionSet.valueOf(OPTION_URL);
+        boolean etagSupport = (boolean) optionSet.valueOf(OPTION_ETAG_SUPPORT);
+        long intervalms = (long) optionSet.valueOf(OPTION_INTERVAL_MS);
+        String rootFolder = (String) optionSet.valueOf(OPTION_ROOT_FOLDER);
+        String fileSuffix = (String) optionSet.valueOf(OPTION_FILE_SUFFIX);
+        String partitionFormat = (String) optionSet.valueOf(OPTION_PARTITION_FORMAT);
+        String parsingClass = (String) optionSet.valueOf(OPTION_PARSING_CLASS);
+
         if (defaultFs != null) {
             conf.set("fs.defaultFS", defaultFs);
         }
@@ -45,8 +53,8 @@ public class PollerToHDFSTwillApp extends AbstractTwillRunnable {
         try {
             fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf);
 
-            LOG.info("PartitionFormat "+ PARTITION_FORMAT);
-            Observable.create(new PollerObservable()).subscribe(new PartitionedObserver(ROOT_FOLDER, PARTITION_FORMAT, FILE_SUFFIX, fs));
+            LOG.info("PartitionFormat "+ partitionFormat);
+            Observable.create(new PollerObservable(url, etagSupport, intervalms, parsingClass)).subscribe(new PartitionedObserver(rootFolder, partitionFormat, fileSuffix, fs));
 
         } catch (IOException e) {
             LOG.error("Got an IOException", e);
