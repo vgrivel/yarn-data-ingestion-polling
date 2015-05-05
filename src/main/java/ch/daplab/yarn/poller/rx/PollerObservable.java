@@ -36,14 +36,13 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
         if (!subscriberRef.compareAndSet(null, subscriber)) {
             return;
         }
-
-        poller = new GeneralPoller(PollerConstants.getUrl(), PollerConstants.isEtagSupported());
+        PollerConstants cst = PollerConstants.getInstance();
+        poller = new GeneralPoller(cst.getUrl(), cst.isEtagSupported());
         poller.registerObserver(this);
 
         LOG.info("Starting to read from the source");
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(poller, 0, PollerConstants.getIntervalMS());
-
+        timer.scheduleAtFixedRate(poller, 0, cst.getIntervalMS());
 
     }
 
@@ -62,7 +61,7 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
 
         } else {
             //process the file by removing the header and change the csv separator from pipe to comma
-            byte[] payload = PollerConstants.getProcessingClass().process(buffer.toString().getBytes());
+            byte[] payload = PollerConstants.getInstance().getProcessingClass().process(buffer.toString().getBytes());
 
             subscriber.onNext(payload);
 

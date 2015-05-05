@@ -1,5 +1,7 @@
 package ch.daplab.yarn;
 
+import ch.daplab.constants.PollerConstants;
+import ch.daplab.utils.Context;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -79,6 +81,8 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
 
         configFilePath = (String) options.valueOf(OPTION_CONFIG_FILE);
 
+        Context context = new Context(configFilePath);
+        PollerConstants.getInstance().load(context);
         curatorFramework = CuratorFrameworkFactory.builder()
                 .connectString(zkConnect)
                 .retryPolicy(new ExponentialBackoffRetry(1000, 3))
@@ -92,11 +96,11 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
             return ReturnCode.CANNOT_CONNECT_TO_ZK;
         }
 
-        return internalRun(configFilePath);
+        return internalRun();
 
     }
 
-    protected abstract int internalRun(String configFilePath) throws Exception;
+    protected abstract int internalRun() throws Exception;
 
     private void privateInitParser() {
         getParser().accepts(OPTION_ZK_CONNECT, "List of ZK host:port hosts, comma-separated.")

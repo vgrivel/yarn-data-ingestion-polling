@@ -45,8 +45,9 @@ public class PollerToHDFSTwillApp extends AbstractTwillRunnable {
         FileSystem fs = null;
         try {
             fs = FileSystem.get(FileSystem.getDefaultUri(conf), conf);
-
-            Observable.create(new PollerObservable()).subscribe(new PartitionedObserver(PollerConstants.getRootFolder(), PollerConstants.getPartitionFormat(), PollerConstants.getFileSuffix(), fs));
+            PollerConstants cst = PollerConstants.getInstance();
+            LOG.info("PartitionFormat "+ cst.getPartitionFormat());
+            Observable.create(new PollerObservable()).subscribe(new PartitionedObserver(cst.getRootFolder(), cst.getPartitionFormat(), cst.getFileSuffix(), fs));
 
         } catch (IOException e) {
             LOG.error("Got an IOException", e);

@@ -14,16 +14,25 @@ import java.lang.reflect.InvocationTargetException;
 public class PollerConstants {
 
 
-    private static long intervalMS;
-    private static String url;
-    private static boolean etagSupport;
-    private static String rootFolder;
-    private static String fileSuffix;
-    private static String partitionFormat;
-    private static FileProcessing fileObject;
+    private long intervalMS;
+    private String url;
+    private boolean etagSupport;
+    private String rootFolder;
+    private String fileSuffix;
+    private String partitionFormat;
+    private FileProcessing fileObject;
 
-    public PollerConstants(Context context) {
-        System.out.println(context.getString("intervalMS"));
+    private static PollerConstants ourInstance = new PollerConstants();
+
+    public static PollerConstants getInstance() {
+        return ourInstance;
+    }
+
+    private PollerConstants() {
+
+    }
+
+    public void load(Context context){
         url = context.getString("url");
         etagSupport = Boolean.valueOf(context.getString("etagSupport"));
         intervalMS = Long.valueOf(context.getString("intervalMS"));
@@ -52,31 +61,31 @@ public class PollerConstants {
     }
 
 
-    public static String getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    public static long getIntervalMS() {
+    public long getIntervalMS() {
         return intervalMS;
     }
 
-    public static boolean isEtagSupported() {
+    public boolean isEtagSupported() {
         return etagSupport;
     }
 
-    public static String getRootFolder() {
+    public String getRootFolder() {
         return rootFolder;
     }
 
-    public static String getFileSuffix() {
+    public String getFileSuffix() {
         return fileSuffix;
     }
 
-    public static String getPartitionFormat() {
+    public String getPartitionFormat() {
         return partitionFormat;
     }
 
-    public static FileProcessing getProcessingClass() {
+    public FileProcessing getProcessingClass() {
         return fileObject;
     }
 

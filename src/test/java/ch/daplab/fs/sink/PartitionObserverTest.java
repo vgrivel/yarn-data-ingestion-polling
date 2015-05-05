@@ -33,7 +33,7 @@ public class PartitionObserverTest {
 
         Path p = new Path(Files.createTempDir().toURI());
 
-        PartitionedObserver partitionedObserver = new PartitionedObserver(p.toString(), PollerConstants.getPartitionFormat(), PollerConstants.getFileSuffix(), fs);
+        PartitionedObserver partitionedObserver = new PartitionedObserver(p.toString(), "yyyy/MM/dd/HH/mm", ".csv", fs);
 
         byte[] payload = new byte[128];
         Arrays.fill(payload, "c".getBytes()[0]);
