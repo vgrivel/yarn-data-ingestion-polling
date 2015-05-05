@@ -1,7 +1,8 @@
 package ch.daplab.yarn.poller;
 
-import ch.daplab.constants.PollerConstants;
 import ch.daplab.utils.Context;
+import ch.daplab.utils.DefaultFileProcessing;
+import ch.daplab.utils.FileProcessing;
 import ch.daplab.yarn.AbstractAppLauncher;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -24,6 +25,14 @@ import java.util.List;
  */
 public class PollerToHDFSCli extends AbstractAppLauncher {
     public static String OPTION_FS_DEFAULTFS = "fs.defaultFS";
+    public static long INTERVAL_MS = 1000;
+    public static String URL = "";
+    public static boolean ETAG_SUPPORT;
+    public static String ROOT_FOLDER = "";
+    public static String FILE_SUFFIX = "";
+    public static String PARTITION_FORMAT = "";
+    public static FileProcessing FILE_OBJECT;
+
 
     private static final Logger LOG = LoggerFactory.getLogger(PollerToHDFSCli.class);
 
@@ -39,6 +48,15 @@ public class PollerToHDFSCli extends AbstractAppLauncher {
      */
     @Override
     protected int internalRun() throws Exception {
+
+        Context context = new Context(getConfigFilePath());
+        URL = context.getString("url");
+        ETAG_SUPPORT = Boolean.valueOf(context.getString("etagSupport"));
+        INTERVAL_MS = Long.valueOf(context.getString("intervalMS"));
+        ROOT_FOLDER = context.getString("rootFolder");
+        FILE_SUFFIX = context.getString("fileSuffix");
+        PARTITION_FORMAT = context.getString("partitionFormat");
+        instantiateClass(context.getString("fileProcessing"));
 
 
         String defaultFS = (String) getOptions().valueOf(OPTION_FS_DEFAULTFS);
@@ -69,5 +87,22 @@ public class PollerToHDFSCli extends AbstractAppLauncher {
 
         // Good, let it simply run on his own.
         return ReturnCode.ALL_GOOD;
+    }
+
+    private void instantiateClass(String fqn) {
+        if (fqn != null || !fqn.equals("")) {
+            try {
+                Class cl = Class.forName(fqn);
+                FILE_OBJECT = (FileProcessing) cl.newInstance();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } else {
+            FILE_OBJECT = new DefaultFileProcessing();
+        }
     }
 }

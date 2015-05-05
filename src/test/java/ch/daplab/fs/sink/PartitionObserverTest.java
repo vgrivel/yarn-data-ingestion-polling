@@ -1,6 +1,5 @@
 package ch.daplab.fs.sink;
 
-import ch.daplab.constants.PollerConstants;
 import com.google.common.io.Files;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;

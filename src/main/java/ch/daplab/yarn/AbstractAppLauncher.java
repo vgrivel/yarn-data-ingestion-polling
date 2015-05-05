@@ -1,7 +1,6 @@
 package ch.daplab.yarn;
 
-import ch.daplab.constants.PollerConstants;
-import ch.daplab.utils.Context;
+
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -81,8 +80,6 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
 
         configFilePath = (String) options.valueOf(OPTION_CONFIG_FILE);
 
-        Context context = new Context(configFilePath);
-        PollerConstants.getInstance().load(context);
         curatorFramework = CuratorFrameworkFactory.builder()
                 .connectString(zkConnect)
                 .retryPolicy(new ExponentialBackoffRetry(1000, 3))
@@ -119,7 +116,6 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
     protected void initParser() {
     }
 
-
     @Override
     public final Configuration getConf() {
         return conf;
@@ -135,6 +131,8 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
         internalClose();
         getCuratorFramework().close();
     }
+
+    public final String getConfigFilePath(){return configFilePath;}
 
     /**
      * Override this function to close additional resources prior to closing the curator framework

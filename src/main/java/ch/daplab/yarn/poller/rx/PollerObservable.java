@@ -1,8 +1,5 @@
 package ch.daplab.yarn.poller.rx;
 
-import ch.daplab.constants.PollerConstants;
-import ch.daplab.utils.FileProcessing;
-import ch.daplab.utils.SwissMetNetCSV;
 import ch.daplab.yarn.poller.NewDataListener;
 import ch.daplab.yarn.poller.worker.GeneralPoller;
 import com.google.common.base.Preconditions;
@@ -16,6 +13,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+
+import static ch.daplab.yarn.poller.PollerToHDFSCli.*;
+
 /**
  * Created by vincent on 4/28/15.
  */
@@ -28,21 +28,20 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
     private volatile AtomicReference<Subscriber<? super byte[]>> subscriberRef = new AtomicReference<>(null);
     private GeneralPoller poller;
 
-    public PollerObservable() {
-    }
+
 
     @Override
     public void call(Subscriber<? super byte[]> subscriber) {
         if (!subscriberRef.compareAndSet(null, subscriber)) {
             return;
         }
-        PollerConstants cst = PollerConstants.getInstance();
-        poller = new GeneralPoller(cst.getUrl(), cst.isEtagSupported());
+
+        poller = new GeneralPoller(URL, ETAG_SUPPORT);
         poller.registerObserver(this);
 
         LOG.info("Starting to read from the source");
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(poller, 0, cst.getIntervalMS());
+        timer.scheduleAtFixedRate(poller, 0, INTERVAL_MS);
 
     }
 
@@ -61,7 +60,7 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
 
         } else {
             //process the file by removing the header and change the csv separator from pipe to comma
-            byte[] payload = PollerConstants.getInstance().getProcessingClass().process(buffer.toString().getBytes());
+            byte[] payload = FILE_OBJECT.process(buffer.toString().getBytes());
 
             subscriber.onNext(payload);
 
