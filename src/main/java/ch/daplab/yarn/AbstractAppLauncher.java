@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractAppLauncher implements Tool, Closeable {
 
     public static final String OPTION_ZK_CONNECT = "zk.connect";
+    public static final String OPTION_CONFIG_FILE = "config";
     protected static final String OPTION_HELP = "help";
 
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -35,6 +36,7 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
     private OptionSet options;
     private String zkConnect;
     private Configuration conf;
+    private String configFilePath;
 
 
     protected final OptionSet getOptions() {
@@ -75,6 +77,8 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
 
         zkConnect = (String) options.valueOf(OPTION_ZK_CONNECT);
 
+        configFilePath = (String) options.valueOf(OPTION_CONFIG_FILE);
+
         curatorFramework = CuratorFrameworkFactory.builder()
                 .connectString(zkConnect)
                 .retryPolicy(new ExponentialBackoffRetry(1000, 3))
@@ -88,11 +92,11 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
             return ReturnCode.CANNOT_CONNECT_TO_ZK;
         }
 
-        return internalRun();
+        return internalRun(configFilePath);
 
     }
 
-    protected abstract int internalRun() throws Exception;
+    protected abstract int internalRun(String configFilePath) throws Exception;
 
     private void privateInitParser() {
         getParser().accepts(OPTION_ZK_CONNECT, "List of ZK host:port hosts, comma-separated.")

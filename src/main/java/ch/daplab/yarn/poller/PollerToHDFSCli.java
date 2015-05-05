@@ -38,8 +38,8 @@ public class PollerToHDFSCli extends AbstractAppLauncher {
      * i.e. local to the server where the command line is launched.
      */
     @Override
-    protected int internalRun() throws Exception {
-        Context context = new Context("conf/config.conf");
+    protected int internalRun(String configFilePath) throws Exception {
+        Context context = new Context(configFilePath);
         new PollerConstants(context);
 
         String defaultFS = (String) getOptions().valueOf(OPTION_FS_DEFAULTFS);
