@@ -15,9 +15,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-
-import static ch.daplab.yarn.poller.PollerToHDFSCli.*;
-
 /**
  * Created by vincent on 4/28/15.
  */
@@ -52,7 +49,6 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
         poller = new GeneralPoller(url, etagSupport);
         poller.registerObserver(this);
 
-        LOG.info("Starting to read from the source");
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(poller, 0, intervalMS);
 
@@ -74,10 +70,7 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
         } else {
             //process the file by removing the header and change the csv separator from pipe to comma
             byte[] payload = processor.process(buffer.toString().getBytes());
-
             subscriber.onNext(payload);
-
-            LOG.info("new data there!!!");
 
         }
     }

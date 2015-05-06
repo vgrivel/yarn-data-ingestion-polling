@@ -1,8 +1,6 @@
 package ch.daplab.yarn.poller;
 
 import ch.daplab.utils.Context;
-import ch.daplab.utils.DefaultFileProcessing;
-import ch.daplab.utils.FileProcessing;
 import ch.daplab.yarn.AbstractAppLauncher;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -75,31 +73,24 @@ public class PollerToHDFSCli extends AbstractAppLauncher {
 
         args.add("--" + OPTION_FS_DEFAULTFS);
         args.add(defaultFS);
-
         args.add("--" + OPTION_INTERVAL_MS);
         args.add(String.valueOf(intervalms));
-
         args.add("--" + OPTION_URL);
         args.add(url);
-
         args.add("--" + OPTION_ETAG_SUPPORT);
         args.add(String.valueOf(etagSupport));
-
         args.add("--" + OPTION_ROOT_FOLDER);
         args.add(rootFolder);
-
         args.add("--" + OPTION_FILE_SUFFIX);
         args.add(fileSuffix);
-
         args.add("--" + OPTION_PARTITION_FORMAT);
         args.add(partitionFormat);
-
         args.add("--" + OPTION_PARSING_CLASS);
         args.add(parsingClass);
 
-
+        //Run PollerToHDFSTwillAPP in another JVM.
         TwillController controller = runnerService.prepare(new PollerToHDFSTwillApp())
-                .withApplicationArguments(args.toArray(new String[0]))
+                .withApplicationArguments(args.toArray(new String[args.size()])) //pass the application arguments
                 .addLogHandler(new PrinterLogHandler(new PrintWriter(System.out))) // write TwillRunnable logs in local System.out
                 .start();
 
