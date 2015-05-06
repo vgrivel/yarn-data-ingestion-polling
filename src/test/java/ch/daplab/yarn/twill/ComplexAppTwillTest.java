@@ -28,7 +28,7 @@ public class ComplexAppTwillTest extends AbstractTwillLauncher {
     public static final String REDIS_SERVICE_NAME = "redis1";
     public static final String REDIS_QUEUE_NAME = "queue1";
 
-    @Test(timeout = 120000)
+    @Test(timeout = 180000)
     public void twillSimpleTest() throws InterruptedException, URISyntaxException {
 
         // Instantiate TwillRunnerService, and waiting for it to start

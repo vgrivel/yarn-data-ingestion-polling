@@ -1,8 +1,7 @@
 package ch.daplab.yarn.poller.rx;
 
-import ch.daplab.constants.PollerConstants;
+import ch.daplab.utils.DefaultFileProcessing;
 import ch.daplab.utils.FileProcessing;
-import ch.daplab.utils.SwissMetNetCSV;
 import ch.daplab.yarn.poller.NewDataListener;
 import ch.daplab.yarn.poller.worker.GeneralPoller;
 import com.google.common.base.Preconditions;
@@ -27,9 +26,19 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
     private CountDownLatch countDownLatch = new CountDownLatch(1);
     private volatile AtomicReference<Subscriber<? super byte[]>> subscriberRef = new AtomicReference<>(null);
     private GeneralPoller poller;
+    private FileProcessing processor;
 
-    public PollerObservable() {
+    private String url;
+    private boolean etagSupport;
+    private long intervalMS;
+
+    public PollerObservable(String url, boolean etagSupport, long intervalMs, String processorClass){
+        this.url = url;
+        this.etagSupport = etagSupport;
+        this.intervalMS = intervalMs;
+        instantiateClass(processorClass);
     }
+
 
     @Override
     public void call(Subscriber<? super byte[]> subscriber) {
@@ -37,13 +46,11 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
             return;
         }
 
-        poller = new GeneralPoller(PollerConstants.getUrl(), PollerConstants.isEtagSupported());
+        poller = new GeneralPoller(url, etagSupport);
         poller.registerObserver(this);
 
-        LOG.info("Starting to read from the source");
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(poller, 0, PollerConstants.getIntervalMS());
-
+        timer.scheduleAtFixedRate(poller, 0, intervalMS);
 
     }
 
@@ -62,12 +69,26 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
 
         } else {
             //process the file by removing the header and change the csv separator from pipe to comma
-            byte[] payload = PollerConstants.getProcessingClass().process(buffer.toString().getBytes());
-
+            byte[] payload = processor.process(buffer.toString().getBytes());
             subscriber.onNext(payload);
 
-            LOG.info("new data there!!!");
+        }
+    }
 
+    private void instantiateClass(String fqn) {
+        if (fqn != null || !fqn.equals("")) {
+            try {
+                Class cl = Class.forName(fqn);
+                processor = (FileProcessing) cl.newInstance();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } else {
+            processor = new DefaultFileProcessing();
         }
     }
 

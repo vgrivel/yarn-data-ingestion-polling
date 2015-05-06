@@ -1,6 +1,5 @@
 package ch.daplab.fs.sink;
 
-import ch.daplab.constants.PollerConstants;
 import com.google.common.io.Files;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -33,7 +32,7 @@ public class PartitionObserverTest {
 
         Path p = new Path(Files.createTempDir().toURI());
 
-        PartitionedObserver partitionedObserver = new PartitionedObserver(p.toString(), PollerConstants.getPartitionFormat(), PollerConstants.getFileSuffix(), fs);
+        PartitionedObserver partitionedObserver = new PartitionedObserver(p.toString(), "yyyy/MM/dd/HH/mm", ".csv", fs);
 
         byte[] payload = new byte[128];
         Arrays.fill(payload, "c".getBytes()[0]);

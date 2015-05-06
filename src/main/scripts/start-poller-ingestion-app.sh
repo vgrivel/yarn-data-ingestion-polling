@@ -8,10 +8,10 @@ then
 fi
 
 # Generate the classpath
-export HADOOP_CLASSPATH=$(find target/lib/ -type f -name "*.jar" | grep -v "yarn-starter" | paste -sd:)
+export HADOOP_CLASSPATH=$(find target/lib/ -type f -name "*.jar" | grep -v "yarn-data-ingestion-polling" | paste -sd:)
 
 # Ensure our libs (mainly specific guava version) has precedence over the one provided by hadoop
 export HADOOP_USER_CLASSPATH_FIRST=true
 
 # Standard launch. PollerToHDFSCli implements Tool interface.
-yarn jar target/yarn-data-*.jar ch.daplab.yarn.poller.PollerToHDFSCli --zk.connect $1
+yarn jar target/yarn-data-*.jar ch.daplab.yarn.poller.PollerToHDFSCli --zk.connect $1 --config $2
