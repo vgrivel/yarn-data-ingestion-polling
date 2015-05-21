@@ -1,0 +1,11 @@
+Column name,Unit,Description
+tre200s0,°C,Air temperature 2 m above ground; current value
+sre000z0,min,Sunshine duration; ten minutes total
+rre150z0,mm,Precipitation; ten minutes total
+dkl010z0,°,Wind direction; ten minutes mean
+fu3010z0,km/h,Wind speed; ten minutes mean
+pp0qnhs0,hPa,Pressure reduced to sea level according to standard atmosphere (QNH); current value
+fu3010z1,km/h,Gust peak (one second); maximum
+ure200s0,%,Relative air humidity 2 m above ground; current value
+prestas0,hPa,Pressure at station level (QFE); current value
+pp0qffs0,hPa,Pressure reduced to sea level (QFF); current value

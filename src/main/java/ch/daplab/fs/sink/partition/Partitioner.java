@@ -1,5 +1,8 @@
 package ch.daplab.fs.sink.partition;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -10,6 +13,7 @@ import java.util.TimeZone;
 public class Partitioner {
 
 
+    private static final Logger LOG = LoggerFactory.getLogger(Partitioner.class);
     private final TimeZone timezone;
     private final String simpleDateFormatString;
     private final SimpleDateFormat simpleDateFormat;
@@ -17,6 +21,7 @@ public class Partitioner {
     private final String suffix;
 
     public Partitioner(String prefix, String simpleDateFormatString, TimeZone timezone, String suffix) {
+        LOG.info("simpleDateFormatString: "+ simpleDateFormatString);
         this.prefix = prefix;
         this.simpleDateFormatString = simpleDateFormatString;
         this.simpleDateFormat = new SimpleDateFormat(simpleDateFormatString);

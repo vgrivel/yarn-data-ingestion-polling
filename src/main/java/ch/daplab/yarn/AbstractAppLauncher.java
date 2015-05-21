@@ -1,5 +1,6 @@
 package ch.daplab.yarn;
 
+
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -26,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractAppLauncher implements Tool, Closeable {
 
     public static final String OPTION_ZK_CONNECT = "zk.connect";
+    public static final String OPTION_CONFIG_FILE = "config";
     protected static final String OPTION_HELP = "help";
 
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -35,6 +37,7 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
     private OptionSet options;
     private String zkConnect;
     private Configuration conf;
+    private String configFilePath;
 
 
     protected final OptionSet getOptions() {
@@ -75,6 +78,8 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
 
         zkConnect = (String) options.valueOf(OPTION_ZK_CONNECT);
 
+        configFilePath = (String) options.valueOf(OPTION_CONFIG_FILE);
+
         curatorFramework = CuratorFrameworkFactory.builder()
                 .connectString(zkConnect)
                 .retryPolicy(new ExponentialBackoffRetry(1000, 3))
@@ -97,6 +102,8 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
     private void privateInitParser() {
         getParser().accepts(OPTION_ZK_CONNECT, "List of ZK host:port hosts, comma-separated.")
                 .withRequiredArg().required();
+        getParser().accepts(OPTION_CONFIG_FILE, "Path of the config file")
+                .withRequiredArg().required();
 
         initParser();
 
@@ -108,7 +115,6 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
      */
     protected void initParser() {
     }
-
 
     @Override
     public final Configuration getConf() {
@@ -125,6 +131,8 @@ public abstract class AbstractAppLauncher implements Tool, Closeable {
         internalClose();
         getCuratorFramework().close();
     }
+
+    public final String getConfigFilePath(){return configFilePath;}
 
     /**
      * Override this function to close additional resources prior to closing the curator framework

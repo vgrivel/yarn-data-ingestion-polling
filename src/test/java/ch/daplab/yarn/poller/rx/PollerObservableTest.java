@@ -20,7 +20,7 @@ public class PollerObservableTest {
 
         final int numberOfUpdate = 1;
 
-        final PollerObservable pollerObservable = new PollerObservable();
+        final PollerObservable pollerObservable = new PollerObservable("", false, 100, "");
         Observer<byte[]> observerMock = Mockito.mock(Observer.class);
 
         Observable<byte[]> observable = Observable.create(pollerObservable);
