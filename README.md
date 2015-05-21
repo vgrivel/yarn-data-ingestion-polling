@@ -1,6 +1,7 @@
 # yarn-data-ingestion-polling
 Poll a datasource with Yarn and store data on the hadoop cluster. It is based on https://github.com/daplab/yarn-starter
 
+
 # Getting Started
 
 ## Configuration
@@ -172,4 +173,5 @@ Explanation of the different columns
 #File processing
 By default, no processing is made to the data. They are directly written to the disk. If you want to process, just create a class that implements FileProcessing and fill the process method.
 The processing method if useful for changing the file format (to CSV, JSON, ...) or removing headers, rows, null value, etc.
+
 
