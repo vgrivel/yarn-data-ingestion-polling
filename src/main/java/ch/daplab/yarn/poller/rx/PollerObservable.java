@@ -76,7 +76,7 @@ public class PollerObservable implements Observable.OnSubscribe<byte[]>, NewData
     }
 
     private void instantiateClass(String fqn) {
-        if (fqn != null || !fqn.equals("")) {
+        if (fqn != null && !fqn.equals("")) {
             try {
                 Class cl = Class.forName(fqn);
                 processor = (FileProcessing) cl.newInstance();
