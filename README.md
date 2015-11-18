@@ -15,7 +15,7 @@ mvn clean install
 ## Running
 Run the script inside the project folder
 ```
- ./src/main/scripts/start-poller-ingestion-app.sh daplab-wn-22.fri.lan:2181 conf/config.conf
+ ./src/main/scripts/start-poller-ingestion-app.sh daplab-wn-21.fri.lan:2181 conf/config.conf
 ```
 ## On running operation
 
